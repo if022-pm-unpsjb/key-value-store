@@ -48,19 +48,19 @@ iex> GenServer.call(:slave1, {:get, :nombre})
 
 El modulo `KeyValueStoreReplicated` implementa el almacen mediante un grupo de procesos, con un primario y replicas, pero que pueden ejecutarse en distintos nodos fisicos:
 
-Ejecutar los nodos añadiendo las opciones `name` y `cookie`. Por ejemplo, suponer que se crea un master y un slave (reemplazar ip por la dirección del nodo):
+Ejecutar los nodos añadiendo las opciones `name` y `cookie`. Por ejemplo, suponer que se crea un master y un slave:
 ```
-$ docker run -it --rm -v $(pwd):/app -w /app --network host elixir:alpine iex -S mix --name master@ip --cookie secret
+$ docker run -it --rm -v $(pwd):/app -w /app --network host elixir:alpine iex --sname master --cookie secret -S mix
 ```
 ```
-$ docker run -it --rm -v $(pwd):/app -w /app --network host elixir:alpine iex -S mix --name slave1@ip --cookie secret
+$ docker run -it --rm -v $(pwd):/app -w /app --network host elixir:alpine iex --sname slave1 --cookie secret -S mix
 ```
 
 En el nodo `slave1` ejecutar:
 ```
 iex> Node.connect(:"master@ip")
 :ok
-iex> KeyValueStoreReplicated.start_link(:slave1)
+iex> KeyValueStoreDistributed.start_link(:slave1)
 {:ok, #PID<0.128.0>}
 ```
 
@@ -68,11 +68,11 @@ En el nodo `master` ejecutar:
 ```
 iex> KeyValueStoreDistributed.start_link
 {:ok, #PID<0.128.0>}
-iex> KeyValueStoreReplicated.add_slave(:slave1)
+iex> KeyValueStoreDistributed.add_slave(:slave1)
 :ok
-iex> KeyValueStoreReplicated.put(:nombre, "Mafalda")
+iex> KeyValueStoreDistributed.put(:nombre, "Mafalda")
 :ok
-iex> KeyValueStoreReplicated.get(:nombre)
+iex> KeyValueStoreDistributed.get(:nombre)
 "Mafalda"
 ```
 

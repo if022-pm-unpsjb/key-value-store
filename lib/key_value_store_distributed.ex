@@ -8,19 +8,23 @@ defmodule KeyValueStoreDistributed do
   end
 
   def put(key, value) do
-    GenServer.call({:global, :master}, {:put, key, value})
+    genserver_call({:put, key, value})
   end
 
   def get(key) do
-    GenServer.call({:global, :master}, {:get, key})
+    genserver_call({:get, key})
   end
 
   def delete(key) do
-    GenServer.call({:global, :master}, {:delete, key})
+    genserver_call({:delete, key})
   end
 
   def add_slave(slave_pid) do
-    GenServer.call({:global, :master}, {:add_slave, {:global, slave_pid}})
+    genserver_call({:add_slave, {:global, slave_pid}})
+  end
+
+  defp genserver_call(params) do
+    GenServer.call({:global, :master}, params)
   end
 
   ## Callbacks del servidor
