@@ -4,10 +4,7 @@ Ejemplo de almacen clave-valor
 
 ## Ejecución
 
-Con Docker:
-```
-$ docker run -it --rm -v $(pwd):/app -w /app --network host elixir:alpine iex -S mix
-```
+Iniciar el contenedor docker mediante el script `./start.sh`.
 
 ## Único servidor
 
